@@ -15,7 +15,7 @@ type User struct {
 	email        string
 }
 
-func authenticate(inName string, inPassword string, matchUser *User) bool {
+func authenticate(inName string, inPassword string, matchUser *User) bool { //authenticate password, this needs to be made secure, rn everything is plaintext
 	if matchUser.password == inPassword {
 		fmt.Println("success")
 		return true
@@ -24,7 +24,7 @@ func authenticate(inName string, inPassword string, matchUser *User) bool {
 	return false
 }
 func login(inName string, inPassword string, userlist *[]User) {
-	for _, v := range *userlist {
+	for _, v := range *userlist { //looks through the list of users
 
 		if v.username == inName {
 			authenticate(inName, inPassword, &v)
@@ -32,7 +32,7 @@ func login(inName string, inPassword string, userlist *[]User) {
 	}
 	fmt.Println("done")
 }
-func getInput(reader *bufio.Scanner) string {
+func getInput(reader *bufio.Scanner) string { //simplifies getting input from the user
 	reader.Scan()
 
 	input := reader.Text()
@@ -40,9 +40,6 @@ func getInput(reader *bufio.Scanner) string {
 	return input
 }
 func main() {
-	//	fmt.Println("hello world")
-	//	name := "test"
-	//	fmt.Println(name)
 	reader := bufio.NewScanner(os.Stdin)
 	file, err := os.Open("C:\\Users\\aaaaaa\\go\\src\\github.com\\cen3031\\userlist.txt")
 	if err != nil {
@@ -52,7 +49,7 @@ func main() {
 	userList := make([]User, 0)
 
 	fileReader := bufio.NewScanner(file)
-	for fileReader.Scan() {
+	for fileReader.Scan() { //read in userlist
 		name := fileReader.Text()
 		fileReader.Scan()
 		password := fileReader.Text()
@@ -61,9 +58,9 @@ func main() {
 		tempUser.password = password
 		userList = append(userList, *tempUser)
 	}
-	fmt.Println("Username")
+	fmt.Println("Username") //get user info
 	var username string = getInput(reader)
 	fmt.Println("Password")
 	var password string = getInput(reader)
-	login(username, password, &userList)
+	login(username, password, &userList) //try to login with the info
 }
