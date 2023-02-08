@@ -1,6 +1,5 @@
 package main
 
-/*
 import (
 	"bufio"
 	"fmt"
@@ -38,12 +37,6 @@ func getInput(reader *bufio.Scanner) string { //simplifies getting input from th
 	input = strings.TrimSuffix(input, "\n")
 	return input
 }
-<<<<<<< Updated upstream
-
-
-func main() {
-	reader := bufio.NewScanner(os.Stdin)
-=======
 func doLogIn(reader *bufio.Scanner, userList *[]User) bool {
 	fmt.Println("Username") //get user info
 	var username string = getInput(reader)
@@ -54,7 +47,6 @@ func doLogIn(reader *bufio.Scanner, userList *[]User) bool {
 func main() {
 	reader := bufio.NewScanner(os.Stdin)
 
->>>>>>> Stashed changes
 	file, err := os.Open("userlist.txt")
 	if err != nil {
 		log.Fatal(err)
@@ -72,35 +64,6 @@ func main() {
 		tempUser.password = password
 		userList = append(userList, *tempUser)
 	}
-<<<<<<< Updated upstream
-	fmt.Println("Username") //get user info
-	var username string = getInput(reader)
-	fmt.Println("Password")
-	var password string = getInput(reader)
-	login(username, password, &userList) //try to login with the info
-
-}
-*/
-
-import (
-	"fmt"
-	"log"
-	"net/http"
-)
-
-var users = map[string]string{
-	"testUser": "Pass",
-}
-// map which holds the user names and pass words will be hashed on the client side
-
-func isAuth(username, password string) bool {
-	pass, isAuthorrized := users[username]
-	if !isAuthorrized {
-		return false
-	}
-
-	return password == pass
-=======
 	err = file.Close()
 	if err != nil {
 		log.Fatal(err)
@@ -158,8 +121,9 @@ func isAuth(username, password string) bool {
 		fmt.Println("Goodbye!")
 		os.Exit(0)
 	}
->>>>>>> Stashed changes
 }
+
+/*
 // checks if the user and pass match based on the map returns bool
 
 func startUp(web http.ResponseWriter, rep *http.Request) {
@@ -173,7 +137,7 @@ func startUp(web http.ResponseWriter, rep *http.Request) {
 		web.Write([]byte(`{"message": "No User Was Given"}`))
 		return
 	}
-	// prompts user to enter credentials pop on the site also on terminal 
+	// prompts user to enter credentials pop on the site also on terminal
 
 	if !isAuth(username, password) {
 		web.Header().Add("WWW-Authenticate", `Basic realm="Give username and password"`)
@@ -197,6 +161,5 @@ func main() {
 
 	// creating a http server using go
 }
-
+*/
 // based on the code on https://umesh.dev/blog/how-to-implement-http-basic-auth-in-gogolang/
-
