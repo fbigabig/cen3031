@@ -1,0 +1,30 @@
+package main
+
+func main()
+	file2, err := os.OpenFile("userlist.txt", os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file2.Close()
+	//get new user's info
+	fmt.Println("New User's Username")
+	newUsername := getInput(reader)
+	fmt.Println("New User's Password")
+	newPassword := getInput(reader)
+
+	hashedPW, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = file2.WriteString(newUsername + "\n" + string(hashedPW) + "\n") //store new user's info
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = file2.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+}

@@ -1,0 +1,12 @@
+{{if .Success}}
+    New user successfully added!
+{{else}}
+    <h1>User Signup</h1>
+    <form method="POST">
+        <label>username</label><br />
+        <input type="text" name="username"><br />
+        <label>password</label><br />
+        <input type="text" name="password"><br />
+        <input type="submit">
+    </form>
+{{end}}

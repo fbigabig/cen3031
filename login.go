@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -13,9 +14,13 @@ import (
 
 var userList []User
 
-func startUp(web http.ResponseWriter, rep *http.Request) {
+func startUp(web http.ResponseWriter, req *http.Request) {
 	//
-
+	tmpl := template.Must(template.ParseFiles("form.html"))
+	if req.Method != http.MethodPost {
+		tmpl.Execute(web, nil)
+		return
+	}
 	file, err := os.Open("userlist.txt")
 	if err != nil {
 		log.Fatal(err)
@@ -27,7 +32,7 @@ func startUp(web http.ResponseWriter, rep *http.Request) {
 		name := fileReader.Text()
 		fileReader.Scan()
 		password := fileReader.Text()
-		fmt.Println("UNPW: " + name + " " + password + "\n")
+		//fmt.Println("UNPW: " + name + " " + password + "\n")
 		tempUser := new(User)
 		tempUser.username = name
 		tempUser.password = password
@@ -38,13 +43,13 @@ func startUp(web http.ResponseWriter, rep *http.Request) {
 		log.Fatal(err)
 	}
 	web.Header().Add("Content-Type", "application/json")
-	username, password, isIn := rep.BasicAuth()
+	username, password, isIn := req.BasicAuth()
 	// uses built in Basic Auth func to check if user is on the site
 
 	if !isIn {
 		web.Header().Add("WWW-Authenticate", `Basic realm="Give username and password"`)
 		web.WriteHeader(http.StatusUnauthorized)
-		web.Write([]byte(`{"message": "No User Was Given"}`))
+		web.Write([]byte("uh oh, something went wrong!"))
 		return
 	}
 	// prompts user to enter credentials pop on the site also on terminal
@@ -52,16 +57,41 @@ func startUp(web http.ResponseWriter, rep *http.Request) {
 	if !login(username, password, &userList) {
 		web.Header().Add("WWW-Authenticate", `Basic realm="Give username and password"`)
 		web.WriteHeader(http.StatusUnauthorized)
-		web.Write([]byte(`{"message": "Incorrect Info"}`))
+		web.Write([]byte("Incorrect Info"))
 		return
 	}
 	// if the user and pass do not match display message
-
 	web.WriteHeader(http.StatusOK)
-	web.Write([]byte(`{"message": "Log in Successful"}`))
-	// once logged in display welcome message
+	web.Write([]byte("Log in Successful"))
 
-	return
+	// once logged in display welcome message
+	file2, err := os.OpenFile("userlist.txt", os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file2.Close()
+	//get new user's info
+
+	newUsername := req.FormValue("username")
+	newPassword := req.FormValue("password")
+
+	hashedPW, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = file2.WriteString(newUsername + "\n" + string(hashedPW) + "\n") //store new user's info
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = file2.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	tmpl.Execute(web, struct{ Success bool }{true})
+
 }
 
 type User struct {
@@ -100,7 +130,7 @@ func doLogIn(reader *bufio.Scanner, userList *[]User) bool {
 	return login(username, password, userList) //try to login with the info
 }
 func main() {
-
+	//reader := bufio.NewScanner(os.Stdin)
 	http.HandleFunc("/", startUp)
 	fmt.Println("Starting Server at port :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -122,43 +152,16 @@ func main() {
 		fmt.Println("Logged in")
 	}*/
 	/*
-		fmt.Println("Type 1 to add a user, or anything else to exit.")
-		var choice string = getInput(reader)
 		if choice == "1" {
+	*/
 
-			file2, err := os.OpenFile("userlist.txt", os.O_WRONLY|os.O_APPEND, 0644)
-			if err != nil {
-				log.Fatal(err)
-			}
-			defer file2.Close()
-			fmt.Println("Username") //get user info
-			var username string = getInput(reader)
-			//get user info
-			fmt.Println("Password") //get user info
-			var password string = getInput(reader)
-			_, err = file2.WriteString(username + "\n")
-
-			if err != nil {
-				log.Fatal(err)
-			}
-			hashedPW, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Println("test")
-			_, err = file2.WriteString(string(hashedPW) + "\n")
-			if err != nil {
-				log.Fatal(err)
-			}
-			err = file2.Close()
-			if err != nil {
-				log.Fatal(err)
-			}
+	/*
 		} else {
 			fmt.Println("Goodbye!")
 			os.Exit(0)
 		}
 	*/
+
 }
 
 // checks if the user and pass match based on the map returns bool
