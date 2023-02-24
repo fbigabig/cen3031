@@ -1,0 +1,138 @@
+package main
+
+
+type db struct {
+	type game struct {
+		name string
+		platform string
+		relaseYear int
+		developer string
+		publisher string
+	}
+	var games []game
+	string sort
+	func init() {
+		games = make([]game, 0)
+	}
+	func changeSort(newSort string) {
+		sort = newSort
+	}
+	func addGame(name string, platform string, releaseYear int, developer string, publisher string) {
+		games = append(games, game{name, platform, releaseYear, developer, publisher})
+	}
+	func sort() {
+		switch sort {
+		case "name":
+			sortByName()
+		case "platform":
+			sortByPlatform()
+		case "releaseYear":
+			sortByReleaseYear()
+		case "developer":
+			sortByDeveloper()
+		case "publisher":
+			sortByPublisher()
+		}
+	}
+	func sortByName() {
+		for i := 0; i < len(games); i++ {
+			for j := 0; j < len(games); j++ {
+				if games[i].name < games[j].name {
+					tempVar := games[i]
+					games[i] = games[j]
+					games[j] = tempVar
+				}
+			}
+		}
+	}
+	func sortByPlatform() {
+		for i := 0; i < len(games); i++ {
+			for j := 0; j < len(games); j++ {
+				if games[i].platform < games[j].platform {
+					tempVar := games[i]
+					games[i] = games[j]
+					games[j] = tempVar
+				}
+			}
+		}
+	}
+	func sortByReleaseYear() {
+		for i := 0; i < len(games); i++ {
+			for j := 0; j < len(games); j++ {
+				if games[i].releaseYear < games[j].releaseYear {
+					tempVar := games[i]
+					games[i] = games[j]
+					games[j] = tempVar
+				}
+			}
+		}
+	}
+	func sortByDeveloper() {
+		for i := 0; i < len(games); i++ {
+			for j := 0; j < len(games); j++ {
+				if games[i].developer < games[j].developer {
+					tempVar := games[i]
+					games[i] = games[j]
+					games[j] = tempVar
+				}
+			}
+		}
+	}
+	func sortByPublisher() {
+		for i := 0; i < len(games); i++ {
+			for j := 0; j < len(games); j++ {
+				if games[i].publisher < games[j].publisher {
+					tempVar := games[i]
+					games[i] = games[j]
+					games[j] = tempVar
+				}
+			}
+		}
+	}
+	func searchByName(name string) []game {
+		var tempVar []game
+		for i := 0; i < len(games); i++ {
+			if games[i].name == name {
+				tempVar = append(tempVar, games[i])
+			}
+		}
+		return tempVar
+	}
+	func searchByPlatform(platform string) []game {
+		var tempVar []game
+		for i := 0; i < len(games); i++ {
+			if games[i].platform == platform {
+				tempVar = append(tempVar, games[i])
+			}
+		}
+		return tempVar
+	}
+	func searchByReleaseYear(releaseYear int) []game {
+		var tempVar []game
+		for i := 0; i < len(games); i++ {
+			if games[i].releaseYear == releaseYear {
+				tempVar = append(tempVar, games[i])
+			}
+		}
+		return tempVar
+	}
+	func searchByDeveloper(developer string) []game {
+		var tempVar []game
+		for i := 0; i < len(games); i++ {
+			if games[i].developer == developer {
+				tempVar = append(tempVar, games[i])
+			}
+		}
+		return tempVar
+	}
+	func searchByPublisher(publisher string) []game {
+		var tempVar []game
+		for i := 0; i < len(games); i++ {
+			if games[i].publisher == publisher {
+				tempVar = append(tempVar, games[i])
+			}
+		}
+		return tempVar
+	}
+
+}
