@@ -2,6 +2,7 @@ package main
 import "database/sql"
 import "sort"
 import "strings"
+import _ "github.com/go-sql-driver/mysql"
 type db struct {
 	type game struct {
 		name string
@@ -14,10 +15,12 @@ type db struct {
 	var games []game
 	var curGames []game
 	string sortType
+	var db *sql.DB 
 	func init() {
 		games = make([]game, 0)
 		curGames = make([]game, 0)
 		sortType = "name"
+		db = sql.Open("mysql", "tempreplacethingy")
 	}
 	func changeSort(newSort string) {
 		sortType = newSort
