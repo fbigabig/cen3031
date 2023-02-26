@@ -131,6 +131,8 @@ func doLogIn(reader *bufio.Scanner, userList *[]User) bool {
 }
 func main() {
 	//reader := bufio.NewScanner(os.Stdin)
+	var games db
+	games.init()
 	http.HandleFunc("/", startUp)
 	fmt.Println("Starting Server at port :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

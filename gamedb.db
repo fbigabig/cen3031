@@ -1,0 +1,6 @@
+    CREATE TABLE `userinfo` (
+        `username` VARCHAR(64) NULL,
+        `password` VARCHAR(64) NULL,
+        `creationDate` DATE NULL
+        `email` VARCHAR(64) NULL,
+    );
