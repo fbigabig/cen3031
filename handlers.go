@@ -2,12 +2,12 @@ package main
 
 import (
 	"net/http"
-	//"log"
+	"log"
 	"encoding/json"
 	"fmt"
 	"time"
 
-
+	//"golang.org/x/crypto/bcrypt"
 	"github.com/golang-jwt/jwt"
 )
 
@@ -31,15 +31,43 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-/* func main () {
+func main () {
+	http.HandleFunc("/create", Create)
 	http.HandleFunc("/login", Login)
 	http.HandleFunc("/home", Home)
 	http.HandleFunc("/refresh", Refresh)
 
 	log.Fatal(http.ListenAndServe(":8080",nil))
-} */
+} 
 
 // handles the three funcs and creates basic local server 
+
+func Create(w http.ResponseWriter, r *http.Request) {
+
+	var credentials Credentials
+	// user and pass object
+
+	err := json.NewDecoder(r.Body).Decode(&credentials)
+	// decode the pass if no err continue
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	//hash, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), 10)
+
+	//if err != nil {
+	//	w.WriteHeader(http.StatusBadRequest)
+	//	return
+	//}
+
+	users[credentials.Username] = credentials.Password
+
+	// adds the user and pass to the list and allows it to log in
+
+	// *needs to be fixed to allow encoding* and *databases* 
+}
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	var credentials Credentials
