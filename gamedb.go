@@ -1,11 +1,11 @@
 package main
 
 import (
-	"database/sql"
+	//"database/sql"
+	"fmt"
 	"sort"
 	"strings"
-
-	_ "github.com/mattn/go-sqlite3"
+	//_ "github.com/mattn/go-sqlite3"
 )
 
 type game struct {
@@ -17,22 +17,26 @@ type game struct {
 }
 
 type db struct {
-	games []game
-	//var curGames []game
+	games    []game
+	curGames []game
 	sortType string
-	data     *sql.DB
+	//data     *sql.DB
 }
 
+func (gm game) print() string {
+	temp := ("Name:" + gm.name + "\tPlatform: " + gm.platform + "\tRelease Year: " + fmt.Sprint(gm.releaseYear) + "\tDeveloper: " + gm.developer + "\tPublisher: " + gm.publisher)
+	return temp
+}
 func (g db) init() {
 	g.games = make([]game, 0)
 	//curGames = make([]game, 0)
 	g.sortType = "name"
-	var err error
-	g.data, err = sql.Open("sqlite3", "./gamedb.db")
-	if err != nil {
-		panic(err)
-	}
-	defer g.data.Close()
+	//var err error
+	//g.data, err = sql.Open("sqlite3", "./gamedb.db")
+	//if err != nil {
+	//	panic(err)
+	//}
+	//defer g.data.Close()
 
 }
 func (g db) changeSort(newSort string) {
@@ -64,12 +68,26 @@ func (g db) sort() {
 		})
 	}
 }
-func (g db) search(item string) {
-	g.games = nil
+func (g db) search(item string) []string {
+	g.curGames = nil
 	for _, v := range g.games {
 		if strings.Contains(v.name, item) || strings.Contains(v.platform, item) || strings.Contains(v.developer, item) || strings.Contains(v.publisher, item) {
-			//g.games = append(curGames, v)
+			g.curGames = append(g.games, v)
 		}
 	}
-
+	return g.printSearch()
+}
+func (g db) print() []string {
+	output := make([]string, 0)
+	for _, v := range g.games {
+		output = append(output, v.print())
+	}
+	return output
+}
+func (g db) printSearch() []string {
+	output := make([]string, 0)
+	for _, v := range g.curGames {
+		output = append(output, v.print())
+	}
+	return output
 }
