@@ -1,14 +1,15 @@
 package main
 
 import (
-	"net/http"
-	"log"
 	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
 	"time"
 
 	//"golang.org/x/crypto/bcrypt"
 	"github.com/golang-jwt/jwt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var jwtKey = []byte("secret_key")
@@ -17,6 +18,7 @@ var users = map[string]string{
 	"pablo": "bueno",
 	"aaron": "gill",
 }
+
 // temporary should be from db in actual implementation
 
 type Credentials struct {
@@ -24,23 +26,26 @@ type Credentials struct {
 	Password string `json:"password"`
 }
 
-// the credentials are sent as json 
+// the credentials are sent as json
 
 type Claims struct {
 	Username string `json:"username"`
 	jwt.StandardClaims
 }
 
-func main () {
+func main() {
+	var games db
+	games.init()
+
 	http.HandleFunc("/create", Create)
 	http.HandleFunc("/login", Login)
 	http.HandleFunc("/home", Home)
 	http.HandleFunc("/refresh", Refresh)
 
-	log.Fatal(http.ListenAndServe(":8080",nil))
-} 
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
 
-// handles the three funcs and creates basic local server 
+// handles the three funcs and creates basic local server
 
 func Create(w http.ResponseWriter, r *http.Request) {
 
@@ -61,12 +66,16 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	//	w.WriteHeader(http.StatusBadRequest)
 	//	return
 	//}
+	hashPW, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), bcrypt.DefaultCost)
 
+	if err != nil {
+		log.Fatal(err)
+	}
 	users[credentials.Username] = credentials.Password
 
 	// adds the user and pass to the list and allows it to log in
 
-	// *needs to be fixed to allow encoding* and *databases* 
+	// *needs to be fixed to allow encoding* and *databases*
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -82,18 +91,19 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	expectedPassword, ok := users[credentials.Username]
-
-	if !ok || expectedPassword != credentials.Password {
+	err = bcrypt.CompareHashAndPassword([]byte(expectedPassword), []byte(credentials.Password))
+	matchPW := err == nil
+	if !ok || !matchPW {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 	// if wrong pass show its unauthorized
 
-	expirationTime := time.Now().Add(time.Minute *5)
+	expirationTime := time.Now().Add(time.Minute * 5)
 
 	// if user and pass is correct then create a 5 min time for token
 
-	claims := &Claims {
+	claims := &Claims{
 		Username: credentials.Username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
@@ -113,10 +123,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.SetCookie(w, &http.Cookie {
-		Name : "token",
-		Value : tokenString,
-		Expires : expirationTime,
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   tokenString,
+		Expires: expirationTime,
 	})
 
 	// no err set cookie
@@ -146,17 +156,17 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 	claims := &Claims{}
 
-	tkn, err := jwt.ParseWithClaims(tokenStr, claims, 
+	tkn, err := jwt.ParseWithClaims(tokenStr, claims,
 		func(t *jwt.Token) (interface{}, error) {
 			return jwtKey, nil
 		})
 
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
-			w.WriteHeader (http.StatusUnauthorized)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		w.WriteHeader (http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -169,11 +179,11 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte(fmt.Sprintf("Hello, %s", claims.Username)))
 
-	// if the token is valid pass data 
+	// if the token is valid pass data
 }
 
 func Refresh(w http.ResponseWriter, r *http.Request) {
-	
+
 	cookie, err := r.Cookie("token")
 	if err != nil {
 		if err == http.ErrNoCookie {
@@ -208,8 +218,8 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 
 	if time.Unix(claims.ExpiresAt, 0).Sub(time.Now()) > 30*time.Second {
 		w.WriteHeader(http.StatusBadRequest)
-	 	return
-	 }
+		return
+	}
 
 	expirationTime := time.Now().Add(time.Minute * 5)
 
