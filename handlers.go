@@ -81,7 +81,8 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	hashPW, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), bcrypt.DefaultCost)
 	credentials.Password = string(hashPW)
 	if err != nil {
-		log.Fatal(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	users[credentials.Username] = credentials.Password
 
