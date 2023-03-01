@@ -27,8 +27,8 @@ type db struct {
 	//data     *sql.DB
 }
 
-func (gm game) print() string {
-	temp := ("Name:" + gm.name + "\tPlatform: " + gm.platform + "\tRelease Year: " + fmt.Sprint(gm.releaseYear) + "\tDeveloper: " + gm.developer + "\tPublisher: " + gm.publisher)
+func (gm *game) print() string {
+	temp := ("Name:" + gm.name + "\t\tPlatform: " + gm.platform + "\t\tRelease Year: " + fmt.Sprint(gm.releaseYear) + "\t\tDeveloper: " + gm.developer + "\t\tPublisher: " + gm.publisher)
 	return temp
 }
 func handleErr(err error) {
@@ -36,9 +36,9 @@ func handleErr(err error) {
 		panic(err)
 	}
 }
-func (g db) init() {
+func (g *db) init() {
 	g.games = make([]game, 0)
-	//curGames = make([]game, 0)
+	g.curGames = make([]game, 0)
 	g.sortType = "name"
 	file, err := os.Open("gamelist.txt") //open userlist
 	if err != nil {
@@ -48,27 +48,31 @@ func (g db) init() {
 	for fileReader.Scan() { //read in userlist
 		var temp game
 		temp.name = fileReader.Text()
+		//fmt.Println(temp.name)
 		fileReader.Scan()
 		temp.platform = fileReader.Text()
-		//fmt.Println("UNPW: " + name + " " + password + "\n")
+		//fmt.Println(temp.platform)
 		fileReader.Scan()
 		temp.releaseYear, err = strconv.Atoi(fileReader.Text())
 		handleErr(err)
+		//fmt.Println(temp.releaseYear)
 		fileReader.Scan()
 		temp.developer = fileReader.Text()
+		//fmt.Println(temp.developer)
 		fileReader.Scan()
 		temp.publisher = fileReader.Text()
+		//fmt.Println(temp.publisher)
 		g.games = append(g.games, temp)
 	}
 	err = file.Close()
 	handleErr(err)
 
 }
-func (g db) changeSort(newSort string) {
+func (g *db) changeSort(newSort string) {
 	g.sortType = newSort
 }
-func (g db) addGame(name string, platform string, releaseYear int, developer string, publisher string) {
-	file2, err := os.OpenFile("userlist.txt", os.O_WRONLY|os.O_APPEND, 0644)
+func (g *db) addGame(name string, platform string, releaseYear int, developer string, publisher string) {
+	file2, err := os.OpenFile("gamelist.txt", os.O_WRONLY|os.O_APPEND, 0644)
 	handleErr(err)
 	file2.WriteString(name + "\n")
 	file2.WriteString(platform + "\n")
@@ -76,8 +80,10 @@ func (g db) addGame(name string, platform string, releaseYear int, developer str
 	file2.WriteString(developer + "\n")
 	file2.WriteString(publisher + "\n")
 	g.games = append(g.games, game{name, platform, releaseYear, developer, publisher})
+	err = file2.Close()
+	handleErr(err)
 }
-func (g db) sort() {
+func (g *db) sort() {
 	if g.sortType == "name" {
 		sort.Slice(g.games, func(i, j int) bool {
 			return g.games[i].name > g.games[j].name
@@ -100,12 +106,25 @@ func (g db) sort() {
 		})
 	}
 }
-func (g db) search(item string) []string {
+func (g *db) search(item string) []string {
 	g.curGames = nil
+	//fmt.Println(len(g.curGames))
 	for _, v := range g.games {
-		if strings.Contains(v.name, item) || strings.Contains(v.platform, item) || strings.Contains(v.developer, item) || strings.Contains(v.publisher, item) {
-			g.curGames = append(g.games, v)
+		if strings.Contains(v.name, item) /*|| strings.Contains(v.platform, item) || strings.Contains(v.developer, item) || strings.Contains(v.publisher, item) */ {
+			g.curGames = append(g.curGames, v)
+			//fmt.Println(v.name, "name")
+		} else if strings.Contains(v.platform, item) {
+			g.curGames = append(g.curGames, v)
+			//fmt.Println(v.platform, "platform")
+		} else if strings.Contains(v.developer, item) {
+			g.curGames = append(g.curGames, v)
+			//fmt.Println(v.developer, "dev")
+		} else if strings.Contains(v.publisher, item) {
+			g.curGames = append(g.curGames, v)
+			//fmt.Println(v.publisher, "pub")
 		}
+		//fmt.Println(len(g.curGames))
+
 	}
 	return g.printSearch()
 }
@@ -119,7 +138,9 @@ func (g db) print() []string {
 func (g db) printSearch() []string {
 	output := make([]string, 0)
 	for _, v := range g.curGames {
+		//fmt.Println(v.name)
 		output = append(output, v.print())
 	}
+	//fmt.Println(len(output))
 	return output
 }
