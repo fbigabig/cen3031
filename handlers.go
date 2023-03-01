@@ -47,7 +47,17 @@ func main() {
 
 // handles the three funcs and creates basic local server
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers",
+		"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	(*w).Header().Set("Access-Control-Allow-Credentials", "true")
+}
+
 func Create(w http.ResponseWriter, r *http.Request) {
+
+	enableCors(&w)
 
 	var credentials Credentials
 	// user and pass object
@@ -66,8 +76,10 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	//	w.WriteHeader(http.StatusBadRequest)
 	//	return
 	//}
-	hashPW, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), bcrypt.DefaultCost)
 
+	//encrypts pw
+	hashPW, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), bcrypt.DefaultCost)
+	credentials.Password = string(hashPW)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -79,6 +91,9 @@ func Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
+
+	enableCors(&w)
+
 	var credentials Credentials
 	// user and pass object
 
@@ -90,6 +105,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//decrypts pw
 	expectedPassword, ok := users[credentials.Username]
 	err = bcrypt.CompareHashAndPassword([]byte(expectedPassword), []byte(credentials.Password))
 	matchPW := err == nil
@@ -134,6 +150,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {
+
+	enableCors(&w)
+
 	cookie, err := r.Cookie("token")
 
 	// get cookie from previous method
@@ -183,6 +202,8 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func Refresh(w http.ResponseWriter, r *http.Request) {
+
+	enableCors(&w)
 
 	cookie, err := r.Cookie("token")
 	if err != nil {
