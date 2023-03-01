@@ -6,17 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'CEN3032';
+  title = 'angular-auth';
 }
-
-var message = 'Hello World!';
-
-function log(message)
-{
-  console.log(message);
-}
-
-log(message);
-
-
-
