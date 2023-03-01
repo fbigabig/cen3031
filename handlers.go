@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"time"
 
-	//"golang.org/x/crypto/bcrypt"
 	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -69,13 +68,6 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	//hash, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), 10)
-
-	//if err != nil {
-	//	w.WriteHeader(http.StatusBadRequest)
-	//	return
-	//}
 
 	//encrypts pw
 	hashPW, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), bcrypt.DefaultCost)
