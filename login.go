@@ -129,42 +129,40 @@ func doLogIn(reader *bufio.Scanner, userList *[]User) bool {
 
 	return login(username, password, userList) //try to login with the info
 }
-func main() {
-	//reader := bufio.NewScanner(os.Stdin)
-	var games db
-	games.init()
-	http.HandleFunc("/", startUp)
-	fmt.Println("Starting Server at port :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
-	/* var loggedIn bool = doLogIn(reader, &userList)
-	if loggedIn {
-		fmt.Println("Logged in")
-	} else {
-		for !loggedIn {
-			fmt.Println("Login failed")
-			fmt.Println("Type 1 to try again, or anything else to exit.")
-			var choice string = getInput(reader)
-			if choice == "1" {
-				loggedIn = doLogIn(reader, &userList)
-			} else {
-				fmt.Println("Goodbye!")
-				os.Exit(0)
-			}
-		}
-		fmt.Println("Logged in")
-	}*/
-	/*
-		if choice == "1" {
-	*/
 
-	/*
+/*
+//func main() {
+//reader := bufio.NewScanner(os.Stdin)
+
+/* var loggedIn bool = doLogIn(reader, &userList)
+if loggedIn {
+	fmt.Println("Logged in")
+} else {
+	for !loggedIn {
+		fmt.Println("Login failed")
+		fmt.Println("Type 1 to try again, or anything else to exit.")
+		var choice string = getInput(reader)
+		if choice == "1" {
+			loggedIn = doLogIn(reader, &userList)
 		} else {
 			fmt.Println("Goodbye!")
 			os.Exit(0)
 		}
-	*/
+	}
+	fmt.Println("Logged in")
+}*/
+/*
+	if choice == "1" {
+*/
 
-}
+/*
+	} else {
+		fmt.Println("Goodbye!")
+		os.Exit(0)
+	}
+*/
+
+//}
 
 // checks if the user and pass match based on the map returns bool
 
