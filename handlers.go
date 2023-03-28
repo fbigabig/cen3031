@@ -324,17 +324,49 @@ func (g *db) init() {
 	}
 
 }
+func (g *db) getReviews(name string) []string {
+	return g.reviews[name]
+}
+func (g *db) addReview(name string, review string) {
+	if(g.reviews[name] == nil) {
+		g.reviews[name] = make([]string, 0)
+		g.reviews[name] = append(g.reviews[name], review)
+	} else {
+		g.reviews[name] = append(g.reviews[name], review)
+	}
+}
+func (g *db) save() {
+	file2, err := os.OpenFile("gamelist.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	handleErr(err)
+	for(i : g.games) {
+		file2.WriteString(i.name + "\n")
+		file2.WriteString(i.platform + "\n")
+		file2.WriteString(fmt.Sprint(i.releaseYear) + "\n")
+		file2.WriteString(i.developer + "\n")
+		file2.WriteString(i.publisher + "\n")
+	}
+	file2, err = os.OpenFile("reviews.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	handleErr(err)
+	for(i : g.reviews) {
+		file2.WriteString(i.name + "\n")
+		file2.WriteString(fmt.Sprint(len(i.reviews)) + "\n")
+		for(j : i.reviews) {
+			file2.WriteString(j + "\n")
+		}
+	}
+
+}
 func (g *db) changeSort(newSort string) {
 	g.sortType = newSort
 }
 func (g *db) addGame(name string, platform string, releaseYear int, developer string, publisher string) {
-	file2, err := os.OpenFile("gamelist.txt", os.O_WRONLY|os.O_APPEND, 0644)
+	/*file2, err := os.OpenFile("gamelist.txt", os.O_WRONLY|os.O_APPEND, 0644)
 	handleErr(err)
 	file2.WriteString(name + "\n")
 	file2.WriteString(platform + "\n")
 	file2.WriteString(fmt.Sprint(releaseYear) + "\n")
 	file2.WriteString(developer + "\n")
-	file2.WriteString(publisher + "\n")
+	file2.WriteString(publisher + "\n")*/
 	g.games = append(g.games, game{name, platform, releaseYear, developer, publisher})
 	err = file2.Close()
 	handleErr(err)
