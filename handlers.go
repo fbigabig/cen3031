@@ -261,6 +261,7 @@ type db struct {
 	games    []game
 	curGames []game
 	sortType string
+	reviews map[string][]string
 	//data     *sql.DB
 }
 
@@ -303,6 +304,24 @@ func (g *db) init() {
 	}
 	err = file.Close()
 	handleErr(err)
+	file, err = os.Open("reviews.txt") //open reviewlist
+	handleErr(err)
+	fileReader = bufio.NewScanner(file)
+	g.reviews = make(map[string][]string)
+	for fileReader.Scan() { //read in reviewlist
+		var temp string
+		temp = fileReader.Text()
+		name := temp
+		var num int
+		num, err = strconv.Atoi(temp)
+		tempSlice:= make([]string, 0)
+		for i := 0; i < num; i++ {
+			fileReader.Scan()
+			temp = fileReader.Text()
+			tempSlice = append(tempSlice, temp)
+		}
+		g.reviews[name] = tempSlice
+	}
 
 }
 func (g *db) changeSort(newSort string) {
@@ -415,3 +434,4 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
+
