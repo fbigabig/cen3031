@@ -251,6 +251,13 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func Logout(w http.ResponseWriter, r *http.Request) {
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Expires: time.Now(),
+	})
+}
+
 type game struct {
 	name        string
 	platform    string
@@ -488,6 +495,7 @@ func main() {
 	http.HandleFunc("/login", Login)
 	http.HandleFunc("/home", Home)
 	http.HandleFunc("/refresh", Refresh)
+	http.HandleFunc("/logout", Logout)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
