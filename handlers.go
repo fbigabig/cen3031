@@ -101,7 +101,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 	// if wrong pass show its unauthorized
 
-	expirationTime := time.Now().Add(time.Minute * 5)
+	/* expirationTime := time.Now().Add(time.Minute * 5)
 
 	// if user and pass is correct then create a 5 min time for token
 
@@ -132,6 +132,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	})
 
 	// no err set cookie
+	*/
 
 }
 
@@ -139,7 +140,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 	enableCors(&w)
 
-	cookie, err := r.Cookie("token")
+	/* cookie, err := r.Cookie("token")
 
 	// get cookie from previous method
 
@@ -185,6 +186,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("Hello, %s", claims.Username)))
 
 	// if the token is valid pass data
+	*/
 }
 
 func Refresh(w http.ResponseWriter, r *http.Request) {
