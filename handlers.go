@@ -435,7 +435,7 @@ func (g db) printSearch() []string {
 func test() {
 	var games db
 	fo, err := os.Create("output.txt")
-
+	//gamedb testing
 	handleErr(err)
 	games.init()
 	games.sort()
@@ -455,6 +455,30 @@ func test() {
 	games.sort()
 	fo.WriteString("test4:\n")
 	fo.WriteString(strings.Join(games.print(), "\n"))
+
+
+	fo.WriteString("\n\n\n")
+
+
+	//reviewdb testing
+	reviews:= games.getReviews("Hollow Knight")
+	sort.Strings(reviews)
+	fmt.Println("Hollow Knight Reviews:\n")
+	
+	for(int i = 0; i < len(reviews); i++) {
+		fmt.Println(reviews[i] + "\n")
+	}
+
+	games.addReview("Hollow Knight", "This game is great!")
+	
+	reviews:= games.getReviews("Hollow Knight")
+	sort.Strings(reviews)
+
+	fmt.Println("Hollow Knight Reviews after adding a review:\n")
+	for(int i = 0; i < len(reviews); i++) {
+		fmt.Println(reviews[i] + "\n")
+	}
+	games.save()
 }
 func main() {
 	test() // test function to test the gamedb api
