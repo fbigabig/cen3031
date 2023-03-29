@@ -19,7 +19,7 @@
     overflow: hidden;
     border-radius: 5px;
     background-color: #ccc3c3;
-    box-shadow: 4px 3px 8px 0px rgb(200 152 44 / 22%);
+    box-shadow: 4px 3px 8px 0px rgba(79, 78, 76, 0.22);
     transition-duration: 0.3s;
     cursor: pointer;
 }
