@@ -462,7 +462,7 @@ func test() {
 	//reviewdb testing
 	reviews := games.getReviews("Hollow Knight")
 	sort.Strings(reviews)
-	fmt.Println("Hollow Knight Reviews:\n")
+	fmt.Println("Hollow Knight Reviews:")
 
 	for i := 0; i < len(reviews); i++ {
 		fmt.Println(reviews[i] + "\n")
@@ -470,10 +470,10 @@ func test() {
 
 	games.addReview("Hollow Knight", "This game is great!")
 
-	reviews := games.getReviews("Hollow Knight")
+	reviews = games.getReviews("Hollow Knight")
 	sort.Strings(reviews)
 
-	fmt.Println("Hollow Knight reviews after adding a review:\n")
+	fmt.Println("Hollow Knight reviews after adding a review:")
 	for i := 0; i < len(reviews); i++ {
 		fmt.Println(reviews[i] + "\n")
 	}
