@@ -17,8 +17,6 @@ export class SearchComponent implements OnInit{
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      username: '',
-      password: ''
     })
   };
 
