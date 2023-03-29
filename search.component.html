@@ -1,0 +1,16 @@
+<router-outlet></router-outlet>
+
+<form [formGroup]="form" (submit)="submit()">
+
+    <span class="logo" routerLink="/">Video Game Database:</span>
+        <input
+            class="search-input"
+            name="search"
+            ngModel
+            placeholder="Search many games">
+
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Search</button>
+</form>
+
+
+
