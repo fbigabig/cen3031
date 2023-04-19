@@ -140,6 +140,13 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 	enableCors(&w)
 
+	switch r.Method {
+	case "GET":
+		http.ServeFile(w, r, "games.json")
+	}
+
+	// example name
+
 	/* cookie, err := r.Cookie("token")
 
 	// get cookie from previous method
