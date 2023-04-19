@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Hollow Knight",
+    "platform": [ "PC", "Switch", "Xbox One", "PS4" ],
+    "year": 2017,
+    "developer": "Team Cherry",
+    "publisher": "Team Cherry"
+  },
+  {
+    "name": "Yakuza 0",
+    "platform": [ "PC", "PS3", "Xbox One", "PS4" ],
+    "year": 2017,
+    "developer": "Ryu Ga Gotoku Studio",
+    "publisher": "SEGA"
+  },
+  {
+    "name": "One Step From Eden",
+    "platform": [ "PC", "Switch", "Xbox One", "PS4" ],
+    "year": 2020,
+    "developer": "Thomas Moon Kang",
+    "publisher": "Humble Bundle"
+  },
+  {
+    "name": "Super Mario Bros",
+    "platform": [ "NES", "Switch", "Wii", "Wii U" ],
+    "year": 1985,
+    "developer": "Nintendo",
+    "publisher": "Nintendo"
+  },
+  {
+    "name": "Super Mario Odyssey",
+    "platform": [ "switch" ],
+    "year": 2017,
+    "developer": "Nintedo",
+    "publisher": "Nintendo"
+  },
+  {
+    "name": "Yakuza 0",
+    "platform": [ "PC", "PS3", "Xbox One", "PS4" ],
+    "year": 2017,
+    "developer": "Ryu Ga Gotoku Studio",
+    "publisher": "SEGA"
+  },
+  {
+    "name": "Yakuza 0",
+    "platform": [ "PC", "PS3", "Xbox One", "PS4" ],
+    "year": 2017,
+    "developer": "Ryu Ga Gotoku Studio",
+    "publisher": "SEGA"
+  },
+  {
+    "name": "Call of Duty: Modern Warfare 2",
+    "platform": [ "PC", "PS3", "Xbox One", "PS4", "Xbox 360"],
+    "year": 2009,
+    "developer": "Infinity Ward",
+    "publisher": "Activision"
+  },
+  {
+    "name": "Spider-Man",
+    "platform": [ "PC", "PS5", "PS4" ],
+    "year": 2018,
+    "developer": "Insomiac Games",
+    "publisher": "Sony"
+  },
+  {
+    "name": "The Legend of Zelda: Breath of the Wild",
+    "platform": ["Wii U", "Switch" ],
+    "year": 2017,
+    "developer": "Nintendo",
+    "publisher": "Nintendo"
+  }
+]
