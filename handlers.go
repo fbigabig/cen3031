@@ -99,8 +99,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-
-
 	// if wrong pass show its unauthorized
 
 	/* expirationTime := time.Now().Add(time.Minute * 5)
@@ -133,7 +131,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		Expires: expirationTime,
 	})
 
-	// no err set cookie */
+	// no err set cookie
+	*/
 
 }
 
@@ -182,13 +181,12 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	*/
-
 	// pass the token and make sure that the type is correct and valid
 
-	// w.Write([]byte(fmt.Sprintf("Hello, %s", claims.Username)))
+	w.Write([]byte(fmt.Sprintf("Hello, %s", claims.Username)))
 
 	// if the token is valid pass data
+	*/
 }
 
 func Refresh(w http.ResponseWriter, r *http.Request) {
@@ -253,6 +251,13 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func Logout(w http.ResponseWriter, r *http.Request) {
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Expires: time.Now(),
+	})
+}
+
 type game struct {
 	name        string
 	platform    string
@@ -265,6 +270,7 @@ type db struct {
 	games    []game
 	curGames []game
 	sortType string
+	reviews  map[string][]string
 	//data     *sql.DB
 }
 
@@ -307,43 +313,94 @@ func (g *db) init() {
 	}
 	err = file.Close()
 	handleErr(err)
+	file, err = os.Open("reviews.txt") //open reviewlist
+	handleErr(err)
+	fileReader = bufio.NewScanner(file)
+	g.reviews = make(map[string][]string)
+	for fileReader.Scan() { //read in reviewlist
+		var temp string
+		temp = fileReader.Text()
+		name := temp
+		var num int
+		num, err = strconv.Atoi(temp)
+		tempSlice := make([]string, 0)
+		for i := 0; i < num; i++ {
+			fileReader.Scan()
+			temp = fileReader.Text()
+			tempSlice = append(tempSlice, temp)
+		}
+		g.reviews[name] = tempSlice
+	}
 
+}
+func (g *db) getReviews(name string) []string {
+	return g.reviews[name]
+}
+func (g *db) addReview(name string, review string) {
+	if g.reviews[name] == nil {
+		g.reviews[name] = make([]string, 0)
+		g.reviews[name] = append(g.reviews[name], review)
+	} else {
+		g.reviews[name] = append(g.reviews[name], review)
+	}
+}
+func (g *db) save() {
+	file2, err := os.OpenFile("gamelist.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	handleErr(err)
+	for _, i := range g.games {
+		file2.WriteString(i.name + "\n")
+		file2.WriteString(i.platform + "\n")
+		file2.WriteString(fmt.Sprint(i.releaseYear) + "\n")
+		file2.WriteString(i.developer + "\n")
+		file2.WriteString(i.publisher + "\n")
+	}
+	file2, err = os.OpenFile("reviews.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	handleErr(err)
+
+	for key, value := range g.reviews {
+		file2.WriteString(key + "\n")
+
+		file2.WriteString(fmt.Sprint(len(value)) + "\n")
+		for _, i := range value {
+			file2.WriteString(i + "\n")
+		}
+	}
 }
 func (g *db) changeSort(newSort string) {
 	g.sortType = newSort
 }
 func (g *db) addGame(name string, platform string, releaseYear int, developer string, publisher string) {
-	file2, err := os.OpenFile("gamelist.txt", os.O_WRONLY|os.O_APPEND, 0644)
+	/*file2, err := os.OpenFile("gamelist.txt", os.O_WRONLY|os.O_APPEND, 0644)
 	handleErr(err)
 	file2.WriteString(name + "\n")
 	file2.WriteString(platform + "\n")
 	file2.WriteString(fmt.Sprint(releaseYear) + "\n")
 	file2.WriteString(developer + "\n")
-	file2.WriteString(publisher + "\n")
+	file2.WriteString(publisher + "\n")*/
 	g.games = append(g.games, game{name, platform, releaseYear, developer, publisher})
-	err = file2.Close()
-	handleErr(err)
+	//err := file2.Close()
+	//handleErr(err)
 }
 func (g *db) sort() {
 	if g.sortType == "name" {
 		sort.Slice(g.games, func(i, j int) bool {
-			return g.games[i].name < g.games[j].name
+			return g.games[i].name > g.games[j].name
 		})
 	} else if g.sortType == "platform" {
 		sort.Slice(g.games, func(i, j int) bool {
-			return g.games[i].platform < g.games[j].platform
+			return g.games[i].platform > g.games[j].platform
 		})
 	} else if g.sortType == "releaseYear" {
 		sort.Slice(g.games, func(i, j int) bool {
-			return g.games[i].releaseYear < g.games[j].releaseYear
+			return g.games[i].releaseYear > g.games[j].releaseYear
 		})
 	} else if g.sortType == "developer" {
 		sort.Slice(g.games, func(i, j int) bool {
-			return g.games[i].developer < g.games[j].developer
+			return g.games[i].developer > g.games[j].developer
 		})
 	} else if g.sortType == "publisher" {
 		sort.Slice(g.games, func(i, j int) bool {
-			return g.games[i].publisher < g.games[j].publisher
+			return g.games[i].publisher > g.games[j].publisher
 		})
 	}
 }
@@ -388,7 +445,7 @@ func (g db) printSearch() []string {
 func test() {
 	var games db
 	fo, err := os.Create("output.txt")
-
+	//gamedb testing
 	handleErr(err)
 	games.init()
 	games.sort()
@@ -396,7 +453,7 @@ func test() {
 	fo.WriteString("test1:\n")
 	fo.WriteString(strings.Join(games.print(), "\n"))
 	fo.WriteString("\n")
-	games.addGame("Test", "test", 2000, "test", "test")
+	games.addGame("test", "test", 2000, "test", "test")
 	games.sort()
 	fo.WriteString("test2:\n")
 	fo.WriteString(strings.Join(games.print(), "\n"))
@@ -408,6 +465,28 @@ func test() {
 	games.sort()
 	fo.WriteString("test4:\n")
 	fo.WriteString(strings.Join(games.print(), "\n"))
+
+	fo.WriteString("\n\n\n")
+
+	//reviewdb testing
+	reviews := games.getReviews("Hollow Knight")
+	sort.Strings(reviews)
+	fmt.Println("Hollow Knight Reviews:")
+
+	for i := 0; i < len(reviews); i++ {
+		fmt.Println(reviews[i] + "\n")
+	}
+
+	games.addReview("Hollow Knight", "This game is great!")
+
+	reviews = games.getReviews("Hollow Knight")
+	sort.Strings(reviews)
+
+	fmt.Println("Hollow Knight reviews after adding a review:")
+	for i := 0; i < len(reviews); i++ {
+		fmt.Println(reviews[i] + "\n")
+	}
+	games.save()
 }
 func main() {
 	test() // test function to test the gamedb api
@@ -416,6 +495,7 @@ func main() {
 	http.HandleFunc("/login", Login)
 	http.HandleFunc("/home", Home)
 	http.HandleFunc("/refresh", Refresh)
+	http.HandleFunc("/logout", Logout)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

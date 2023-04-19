@@ -19,6 +19,7 @@ export class LogoutComponent implements OnInit{
 
  logout() : void{
     this.http.post('http://localhost:8080/api/logout', {}, {withCredentials: true}).subscribe(() => this.authenticated = false);
+    this.router.navigate(['/']);
   }
 
   nologout():void{
