@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Hollow Knight",
+    "reviews": [
+      {
+        "review": "good game",
+        "score": 7
+      },
+      {
+        "review": "confusing",
+        "score": 3
+      },
+      {
+        "review": "masterpiece",
+        "score": 10
+      }
+    ]
+  },
+  {
+    "name": "One Step From Eden",
+    "reviews": [
+      {
+        "review": "fast paced",
+        "score": 7
+      },
+      {
+        "review": "too difficult",
+        "score": 4
+      },
+      {
+        "review": "good roguelike",
+        "score": 9
+      }
+    ]
+  },
+  {
+    "name": "Yakuza 0",
+    "reviews": [
+      {
+        "review": "sad",
+        "score": 8
+      },
+      {
+        "review": "good story mid combat",
+        "score": 7
+      },
+      {
+        "review": "god tier game",
+        "score": 9
+      }
+    ]
+  }
+]
