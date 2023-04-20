@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule} from '@angular/common/http';
+import { DetailsComponent } from './details/details.component';
+import { SearchComponent } from './search/search.component';
 
 
 
@@ -13,7 +15,9 @@ import { HttpClientModule} from '@angular/common/http';
   declarations: [
     AppComponent,
     routingComponents,
-    NavComponent
+    NavComponent,
+    DetailsComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,
